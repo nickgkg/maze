@@ -7,6 +7,8 @@ public class MazeCreator : MonoBehaviour {
 	int width = 15;
 	int height = 15;
 
+	float timeUntilShuffle = 10f;
+
 	public GameObject wall;
 
 	private class MazePiece {
@@ -26,7 +28,15 @@ public class MazeCreator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (Root.gameRunning) {
+			timeUntilShuffle -= Time.deltaTime;
+
+			if (timeUntilShuffle <= 0) {
+				timeUntilShuffle = 10;
+
+				ShuffleMaze();
+			}
+		}
 	}
 
 	void CreateMaze() {
@@ -130,14 +140,22 @@ public class MazeCreator : MonoBehaviour {
 			}
 			line += "\n";
 		}
-		print (line);
+		//print (line);
 	}
 
 	void ShuffleMaze() {
-	
+		ClearMaze();
+		CreateMaze();
+		PrintMaze();
 	}
 
 	void HideMaze() {
 		
+	}
+
+	void ClearMaze() {
+		foreach (Transform child in transform) {
+			GameObject.Destroy(child.gameObject);
+		}
 	}
 }
