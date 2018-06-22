@@ -29,6 +29,8 @@ public class Player : MonoBehaviour {
 		if (Input.GetKey(KeyCode.RightArrow)) {
 			playerRigidbody.AddForce(acceleration * new Vector2(1, 0));
 		}
+
+		transform.up = playerRigidbody.velocity.normalized;
 	}
 
 	void OnCollisionEnter2D(Collision2D col) {
