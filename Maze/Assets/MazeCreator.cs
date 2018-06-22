@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class MazeCreator : MonoBehaviour {
 	// these should be odd if we want 0,0 to be a space instead of a wall
@@ -41,6 +42,8 @@ public class MazeCreator : MonoBehaviour {
 
 				ShuffleMaze();
 			}
+
+			Root.timeToShuffleLabel.text = "Shuffle Timer: " + Convert.ToInt32(timeUntilShuffle).ToString();
 		}
 	}
 
@@ -79,7 +82,7 @@ public class MazeCreator : MonoBehaviour {
 				break;
 			}
 
-			int random = Random.Range (0, options.Count);
+			int random = UnityEngine.Random.Range (0, options.Count);
 			int choice = options[random];
 
 			switch (choice) {

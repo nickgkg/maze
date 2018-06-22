@@ -10,11 +10,14 @@ public class Root : MonoBehaviour {
 
 	public static bool gameRunning = false;
 
-	public Text timeRemainingLabel;
+	public static Text timeRemainingLabel;
+
+	public static Text timeToShuffleLabel;
 
 	// Use this for initialization
 	void Start () {
 		timeRemainingLabel = GameObject.Find("TimeRemainingLabel").GetComponent<Text>();
+		timeToShuffleLabel = GameObject.Find("TimeToShuffleLabel").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
