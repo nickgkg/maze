@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class MazeCreator : MonoBehaviour {
 	// these should be odd if we want 0,0 to be a space instead of a wall
-	int width = 15;
-	int height = 15;
+	public int width = 15;
+	public int height = 15;
+	public float gridSize = 0.5f;
 
-	float timeUntilShuffle = 10f;
+	float timeUntilShuffle = 2f;
 
-	public GameObject wall;
+	public GameObject wallStraight;
+	public GameObject wallCorner;
+	public GameObject wall1;
+	public GameObject wall3;
+	public GameObject wall4;
 
 	private class MazePiece {
 		public bool created = false;
@@ -25,7 +30,7 @@ public class MazeCreator : MonoBehaviour {
 		CreateMaze ();
 		PrintMaze ();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (Root.gameRunning) {
@@ -98,27 +103,86 @@ public class MazeCreator : MonoBehaviour {
 		}
 	}
 
+	bool hasRightWall(int i, int j) {
+		return j != -1 && j != height && (i == -1 || i == width - 1 || maze [i, j].right);
+	}
+
+	bool hasBottomWall(int i, int j) {
+		return i != -1 && i != width && (j == -1 || j == height - 1 || maze [i, j].bottom);
+	}
+
+	void addWall(GameObject wallType, float x, float y, float angle) {
+		GameObject go = Instantiate (
+			wallType,
+			new Vector3 (x + gridSize * 1.5f, y + gridSize * 1.5f, 0),
+			Quaternion.Euler(new Vector3(0, 0, angle))
+		) as GameObject;
+		go.transform.parent=transform;
+	}
+
 	void generateWalls() {
 		for (int i = -1; i < width; i++) {
 			for (int j = -1; j < height; j++) {
-				float x = (i - width * .5f) * .5f + .25f;
-				float y = (j - height * .5f) * .5f + .25f;
-				if (j != -1 && (i == -1 || i == width-1 || maze[i,j].right)) {
-					GameObject go = Instantiate (
-						wall,
-						new Vector3 (x + .25f, y, 0),
-						Quaternion.identity
-					) as GameObject;
-					go.transform.parent=transform;
+				float x = (i - (width + 1) * .5f) * gridSize;
+				float y = (j - (height + 1) * .5f) * gridSize;
+				bool top = hasRightWall (i, j);
+				bool bottom = hasRightWall (i, j + 1);
+				bool left = hasBottomWall (i, j);
+				bool right = hasBottomWall (i + 1, j);
+
+				//4 way
+				if (top && bottom && left && right) {
+					addWall (wall4, x, y, 0);
 				}
-				if (i != -1 && (j == -1 || j == height-1 || maze[i,j].bottom)) {
-					GameObject go = Instantiate (
-						wall,
-						new Vector3 (x, y + .25f, 0),
-						Quaternion.Euler(new Vector3(0, 0, 90))
-					) as GameObject;
-					go.transform.parent=transform;
+
+				//3 way
+				else if (top && bottom && left) {
+					addWall (wall3, x, y, 270);
 				}
+				else if (top && left && right) {
+					addWall (wall3, x, y, 0);
+				}
+				else if (bottom && left && right) {
+					addWall (wall3, x, y, 180);
+				}
+				else if (top && bottom && right) {
+					addWall (wall3, x, y, 90);
+				}
+
+				//2 way
+				else if (top && bottom) {
+					addWall (wallStraight, x, y , 0);
+				}
+				else if (left && right) {
+					addWall (wallStraight, x, y, 90);
+				}
+				else if (top && right) {
+					addWall (wallCorner, x, y, 0);
+				}
+				else if (bottom && right) {
+					addWall (wallCorner, x, y, 90);
+				}
+				else if (bottom && left) {
+					addWall (wallCorner, x, y, 180);
+				}
+				else if (top && left) {
+					addWall (wallCorner, x, y, 270);
+				}
+
+				//1 way
+				else if (top) {
+					addWall (wall1, x, y, 0);
+				}
+				else if (right) {
+					addWall (wall1, x, y, 90);
+				}
+				else if (bottom) {
+					addWall (wall1, x, y, 180);
+				}
+				else if (left) {
+					addWall (wall1, x, y, 270);
+				}
+
 			}
 		}
 	}
@@ -140,9 +204,9 @@ public class MazeCreator : MonoBehaviour {
 			}
 			line += "\n";
 		}
-		//print (line);
+		// print (line);
 	}
-
+		
 	void ShuffleMaze() {
 		ClearMaze();
 		CreateMaze();
@@ -150,7 +214,7 @@ public class MazeCreator : MonoBehaviour {
 	}
 
 	void HideMaze() {
-		
+
 	}
 
 	void ClearMaze() {
