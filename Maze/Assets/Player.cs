@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-	public Vector2 acceleration = new Vector2(10f, 10f);
+	public float acceleration = 10f;
 	private Rigidbody2D playerRigidbody;
 
 
