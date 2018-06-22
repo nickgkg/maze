@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 	public Vector2 acceleration = new Vector2(10f, 10f);
-	private Rigidbody2D playerRigidbody; 
+	private Rigidbody2D playerRigidbody;
 
 
 	// Use this for initialization
