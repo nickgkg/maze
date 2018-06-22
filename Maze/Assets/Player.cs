@@ -3,39 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-	private float xAcceleration = 0.01f;
-	private float yAcceleration = 0.01f;
-	public Vector2 playerSpeed = Vector2.zero;
+	public Vector2 acceleration = new Vector2(10f, 10f);
+	private Rigidbody2D playerRigidbody; 
 
 
 	// Use this for initialization
 	void Start () {
-		
+		playerRigidbody = GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKey(KeyCode.UpArrow)) {
-			playerSpeed.y += yAcceleration;
+			playerRigidbody.AddForce(acceleration * new Vector2(0, 1));
 		}
 
 		if (Input.GetKey(KeyCode.DownArrow)) {
-			playerSpeed.y -= yAcceleration;
+			playerRigidbody.AddForce(acceleration * new Vector2(0, -1));
 		}
 
 		if (Input.GetKey(KeyCode.LeftArrow)) {
-			playerSpeed.x -= xAcceleration;
+			playerRigidbody.AddForce(acceleration * new Vector2(-1, 0));
 		}
 
 		if (Input.GetKey(KeyCode.RightArrow)) {
-			playerSpeed.x += xAcceleration;
+			playerRigidbody.AddForce(acceleration * new Vector2(1, 0));
 		}
-
-		updatePosition();
-	}
-
-	void updatePosition() {
-		transform.Translate(playerSpeed);
 	}
 
 	void OnCollisionEnter2D(Collision2D col) {
