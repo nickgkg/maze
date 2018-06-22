@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 
 public class Root : MonoBehaviour {
@@ -9,9 +10,11 @@ public class Root : MonoBehaviour {
 
 	public static bool gameRunning = false;
 
+	public Text timeRemainingLabel;
+
 	// Use this for initialization
 	void Start () {
-		
+		timeRemainingLabel = GameObject.Find("TimeRemainingLabel").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
@@ -22,6 +25,8 @@ public class Root : MonoBehaviour {
 
 		if (gameRunning) {
 			timeRemaining -= Time.deltaTime;
+
+			timeRemainingLabel.text = "Time Remaining: " + Convert.ToInt32(timeRemaining).ToString();
 		}
 	}
 	
