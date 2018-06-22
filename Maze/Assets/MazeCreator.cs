@@ -9,13 +9,16 @@ public class MazeCreator : MonoBehaviour {
 	public int height = 15;
 	public float gridSize = 0.5f;
 
-	float timeUntilShuffle = 10f;
+	public float shuffleTime = 10f;
+	float timeUntilShuffle;
 
-	public GameObject wallStraight;
-	public GameObject wallCorner;
-	public GameObject wall1;
-	public GameObject wall3;
-	public GameObject wall4;
+	public List<float> weights;
+
+	public List<GameObject> wallStraight;
+	public List<GameObject> wallCorner;
+	public List<GameObject> wall1;
+	public List<GameObject> wall3;
+	public List<GameObject> wall4;
 
 	private class MazePiece {
 		public bool created = false;
@@ -28,6 +31,7 @@ public class MazeCreator : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		maze = new MazePiece[width,height];
+		timeUntilShuffle = shuffleTime;
 		CreateMaze ();
 		PrintMaze ();
 	}
@@ -43,7 +47,10 @@ public class MazeCreator : MonoBehaviour {
 				ShuffleMaze();
 			}
 
-			Root.timeToShuffleLabel.text = "Shuffle Timer: " + Convert.ToInt32(timeUntilShuffle).ToString();
+			//Root.timeToShuffleLabel.text = "Shuffle Timer: " + Convert.ToInt32(timeUntilShuffle).ToString();
+			Vector2 vec = Root.shuffleTimer.anchorMax;
+			vec.x = timeUntilShuffle / shuffleTime;
+			Root.shuffleTimer.anchorMax = vec;
 		}
 	}
 
@@ -114,13 +121,41 @@ public class MazeCreator : MonoBehaviour {
 		return i != -1 && i != width && (j == -1 || j == height - 1 || maze [i, j].bottom);
 	}
 
-	void addWall(GameObject wallType, float x, float y, float angle) {
+	int getRandomWeight() {
+		float weightSum = 0f;
+		for (int i = 0; i < weights.Count; ++i)
+		{
+			weightSum += weights[i];
+		}
+
+		// Step through all the possibilities, one by one, checking to see if each one is selected.
+		int index = 0;
+		int lastIndex = weights.Count - 1;
+		float random = UnityEngine.Random.Range (0, weightSum);
+		while (index < lastIndex)
+		{
+			if (random < weights[index]) {
+				return index;
+			}
+
+			weightSum -= weights[index++];
+		}
+
+		return index;
+	}
+
+	void addWall(List<GameObject> wallTypes, float x, float y, float angle) {
+		GameObject wallType = wallTypes [getRandomWeight()];
 		GameObject go = Instantiate (
 			wallType,
-			new Vector3 (x + gridSize * 1.5f, y + gridSize * 1.5f, 0),
+			new Vector3 (x + gridSize * 1.5f, y + gridSize * 1.5f - 0.8f, 0),
 			Quaternion.Euler(new Vector3(0, 0, angle))
 		) as GameObject;
 		go.transform.parent=transform;
+		Vector3 scale = go.transform.localScale;
+		scale.x = 0.2f * gridSize;
+		scale.y = 0.2f * gridSize;
+		go.transform.localScale = scale;
 	}
 
 	void generateWalls() {
@@ -209,7 +244,7 @@ public class MazeCreator : MonoBehaviour {
 		}
 		// print (line);
 	}
-		
+
 	void ShuffleMaze() {
 		ClearMaze();
 		CreateMaze();

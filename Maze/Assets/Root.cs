@@ -6,7 +6,8 @@ using System;
 
 public class Root : MonoBehaviour {
 	// use this for global code/timer stuff - nick
-	private float timeRemaining = 90f;
+	public float gameTime = 90f;
+	public static float timeRemaining;
 
 	public static bool gameRunning = false;
 
@@ -14,12 +15,17 @@ public class Root : MonoBehaviour {
 
 	public static Text timeToShuffleLabel;
 
+	public static RectTransform gameTimer;
+	public static RectTransform shuffleTimer;
+
 	public Button startGameButton;
 
 	// Use this for initialization
 	void Start () {
-		timeRemainingLabel = GameObject.Find("TimeRemainingLabel").GetComponent<Text>();
-		timeToShuffleLabel = GameObject.Find("TimeToShuffleLabel").GetComponent<Text>();
+		//timeRemainingLabel = GameObject.Find("TimeRemainingLabel").GetComponent<Text>();
+		//timeToShuffleLabel = GameObject.Find("TimeToShuffleLabel").GetComponent<Text>();
+		gameTimer = GameObject.Find("GameTimer").GetComponent<RectTransform>();
+		shuffleTimer = GameObject.Find("ShuffleTimer").GetComponent<RectTransform>();
 
 		startGameButton = GameObject.Find("StartGameButton").GetComponent<Button>();
 
@@ -31,7 +37,11 @@ public class Root : MonoBehaviour {
 		if (gameRunning) {
 			timeRemaining -= Time.deltaTime;
 
-			timeRemainingLabel.text = "Time Remaining: " + Convert.ToInt32(timeRemaining).ToString();
+			Vector2 vec = gameTimer.anchorMax;
+			vec.x = timeRemaining / gameTime;
+			gameTimer.anchorMax = vec;
+
+			//timeRemainingLabel.text = "Time Remaining: " + Convert.ToInt32(timeRemaining).ToString();
 
 			if (timeRemaining <= 0) {
 				EndGame();
@@ -40,7 +50,7 @@ public class Root : MonoBehaviour {
 	}
 	
 	void BeginGame() {
-		timeRemaining = 90f;
+		timeRemaining = gameTime;
 		gameRunning = true;
 	}
 
