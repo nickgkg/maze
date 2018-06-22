@@ -28,20 +28,24 @@ public class Root : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			gameRunning = true;
-		}
-
 		if (gameRunning) {
 			timeRemaining -= Time.deltaTime;
 
 			timeRemainingLabel.text = "Time Remaining: " + Convert.ToInt32(timeRemaining).ToString();
+
+			if (timeRemaining <= 0) {
+				EndGame();
+			}
 		}
 	}
 	
 	void BeginGame() {
 		timeRemaining = 90f;
 		gameRunning = true;
+	}
+
+	void EndGame() {
+		gameRunning = false;
 	}
 
 	void OnStartButtonClicked() {
