@@ -14,23 +14,25 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey(KeyCode.UpArrow)) {
-			playerRigidbody.AddForce(acceleration * new Vector2(0, 1));
-		}
+		if (Root.gameRunning) {
+			if (Input.GetKey(KeyCode.UpArrow)) {
+				playerRigidbody.AddForce(acceleration * new Vector2(0, 1));
+			}
 
-		if (Input.GetKey(KeyCode.DownArrow)) {
-			playerRigidbody.AddForce(acceleration * new Vector2(0, -1));
-		}
+			if (Input.GetKey(KeyCode.DownArrow)) {
+				playerRigidbody.AddForce(acceleration * new Vector2(0, -1));
+			}
 
-		if (Input.GetKey(KeyCode.LeftArrow)) {
-			playerRigidbody.AddForce(acceleration * new Vector2(-1, 0));
-		}
+			if (Input.GetKey(KeyCode.LeftArrow)) {
+				playerRigidbody.AddForce(acceleration * new Vector2(-1, 0));
+			}
 
-		if (Input.GetKey(KeyCode.RightArrow)) {
-			playerRigidbody.AddForce(acceleration * new Vector2(1, 0));
-		}
+			if (Input.GetKey(KeyCode.RightArrow)) {
+				playerRigidbody.AddForce(acceleration * new Vector2(1, 0));
+			}
 
-		transform.up = playerRigidbody.velocity.normalized;
+			transform.up = playerRigidbody.velocity.normalized;
+		}
 	}
 
 	void OnCollisionEnter2D(Collision2D col) {
