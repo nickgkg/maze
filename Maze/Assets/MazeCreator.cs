@@ -8,7 +8,7 @@ public class MazeCreator : MonoBehaviour {
 	public int height = 15;
 	public float gridSize = 0.5f;
 
-	float timeUntilShuffle = 2f;
+	float timeUntilShuffle = 10f;
 
 	public GameObject wallStraight;
 	public GameObject wallCorner;
