@@ -10,9 +10,9 @@ public class Player : MonoBehaviour {
 	private GameObject redFlash;
 
 	public float locationGranularity = 0.5f;
-	private bool[,] locations;
+	private static bool[,] locations;
 
-	private static int score = -1;
+	private static int score;
 
 	public static int getScore () {
 		return score * 1000;
@@ -24,7 +24,12 @@ public class Player : MonoBehaviour {
 		redFlash = GameObject.Find("RedFlash");
 		redFlash.SetActive (false);
 
+		Player.reset ();
+	}
+
+	public static void reset(){
 		locations = new bool[30, 30];
+		score = -1;
 	}
 
 	private float damageCooldown = 0;

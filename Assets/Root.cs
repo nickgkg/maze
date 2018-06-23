@@ -70,6 +70,17 @@ public class Root : MonoBehaviour {
 		}
 		GameObject.Find ("ScoreValue").GetComponent<UnityEngine.UI.Text> ().text = "" + Player.getScore ();
 		//TODO remove all the splats and move the player to 0,0
+
+		GameObject[] splats = GameObject.FindGameObjectsWithTag ("splat");
+		for(int i=0;i<splats.Length;i++) {
+			Destroy(splats[i]);
+		}
+
+		GameObject player = GameObject.Find ("Player");
+
+		player.transform.position = new Vector3 (0,0,-.4f);
+		Player.reset ();
+			
 	}
 
 	void OnStartButtonClicked() {
