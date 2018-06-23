@@ -19,6 +19,9 @@ public class Root : MonoBehaviour {
 	public static RectTransform shuffleTimer;
 
 	public Button startGameButton;
+	public GameObject ending;
+	public GameObject won;
+	public GameObject lost;
 
 	// Use this for initialization
 	void Start () {
@@ -49,13 +52,24 @@ public class Root : MonoBehaviour {
 		}
 	}
 	
-	void BeginGame() {
+	public void BeginGame() {
 		timeRemaining = gameTime;
 		gameRunning = true;
+		ending.SetActive (false);
+		won.SetActive(false);
+		lost.SetActive (false);
 	}
 
 	void EndGame() {
 		gameRunning = false;
+		ending.SetActive (true);
+		if (Player.getScore () >= 100000) {
+			won.SetActive (true);
+		} else {
+			lost.SetActive (true);
+		}
+		GameObject.Find ("ScoreValue").GetComponent<UnityEngine.UI.Text> ().text = "" + Player.getScore ();
+		//TODO remove all the splats and move the player to 0,0
 	}
 
 	void OnStartButtonClicked() {

@@ -7,21 +7,30 @@ public class Player : MonoBehaviour {
 	private Rigidbody2D playerRigidbody;
 
 	public GameObject splat;
+	private GameObject redFlash;
 
 	public float locationGranularity = 0.5f;
 	private bool[,] locations;
 
-	private int score = 0;
+	private static int score = -1;
 
-	public int getScore () {
-		return score;
+	public static int getScore () {
+		return score * 1000;
 	}
 
 	// Use this for initialization
 	void Start () {
 		playerRigidbody = GetComponent<Rigidbody2D>();
+		redFlash = GameObject.Find("RedFlash");
+		redFlash.SetActive (false);
+
 		locations = new bool[30, 30];
 	}
+
+	private float damageCooldown = 0;
+	public float damageResetCooldown = 0.3f;
+	public float damageFlashTime = 0.2f;
+	public float damageAmount = 5f;
 	
 	// Update is called once per frame
 	void Update () {
@@ -60,10 +69,19 @@ public class Player : MonoBehaviour {
 			scale.x = 0.2f;
 			scale.y = 0.2f;
 		}
-
+		damageCooldown -= Time.deltaTime;
+		if (damageCooldown < damageResetCooldown - damageFlashTime) {
+			redFlash.SetActive (false);
+		}
 	}
 
 	void OnCollisionEnter2D(Collision2D col) {
-		
+		if (col.collider.sharedMaterial.name == "Jellyfish") {
+			if (damageCooldown < 0) {
+				Root.timeRemaining -= damageAmount;
+				damageCooldown = damageResetCooldown;
+				redFlash.SetActive (true);
+			}
+		}
 	}
 }

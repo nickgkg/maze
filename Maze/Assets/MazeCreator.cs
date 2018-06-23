@@ -31,9 +31,7 @@ public class MazeCreator : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		maze = new MazePiece[width,height];
-		timeUntilShuffle = shuffleTime;
-		CreateMaze ();
-		PrintMaze ();
+		timeUntilShuffle = 0;
 	}
 
 	// Update is called once per frame
@@ -132,9 +130,11 @@ public class MazeCreator : MonoBehaviour {
 		int index = 0;
 		int lastIndex = weights.Count - 1;
 		float random = UnityEngine.Random.Range (0, weightSum);
+		float weightSum2 = 0f;
 		while (index < lastIndex)
 		{
-			if (random < weights[index]) {
+			weightSum2 += weights [index];
+			if (random < weightSum2) {
 				return index;
 			}
 
@@ -145,7 +145,8 @@ public class MazeCreator : MonoBehaviour {
 	}
 
 	void addWall(List<GameObject> wallTypes, float x, float y, float angle) {
-		GameObject wallType = wallTypes [getRandomWeight()];
+		int rand = getRandomWeight();
+		GameObject wallType = wallTypes [rand];
 		GameObject go = Instantiate (
 			wallType,
 			new Vector3 (x + gridSize * 1.5f, y + gridSize * 1.5f - 0.8f, 0),
